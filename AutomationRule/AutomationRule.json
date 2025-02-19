@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspace": {
+            "type": "String"
+        }
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/64d9d9cd-41d3-461e-a29f-2cfc83dad6fc')]",
+            "type": "Microsoft.OperationalInsights/workspaces/providers/automationRules",
+            "kind": "Scheduled",
+            "apiVersion": "2019-01-01-preview",
+            "properties": {
+                "displayName": "ARM Template Automation Rule",
+                "order": 1,
+                "triggeringLogic": {
+                    "isEnabled": true,
+                    "expirationTimeUtc": null,
+                    "triggersOn": "Incidents",
+                    "triggersWhen": "Created",
+                    "conditions": [
+                        {
+                            "conditionType": "Property",
+                            "conditionProperties": {
+                                "propertyName": "IncidentTactics",
+                                "operator": "Contains",
+                                "propertyValues": [
+                                    "Persistence"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "actions": [
+                    {
+                        "order": 1,
+                        "actionType": "ModifyProperties",
+                        "actionConfiguration": {
+                            "owner": {
+                                "objectId": "b18ef471-be11-439d-9279-5ce4e18b976e",
+                                "email": "SampleEmail@Contoso.com",
+                                "userPrincipalName": "SampleUser@Contoso.com"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
